@@ -1,23 +1,38 @@
+import datetime
 from fastapi import FastAPI
-from typing import Optional, List
 from pydantic import BaseModel, Field
 
-class ShopInfo(BaseModel):
-  name: str
-  location: str
+class Booking(BaseModel):
+  booking_id: int
+  user_id: int
+  room_id: int
+  booked_num: int
+  start_datetime: datetime.datetime
+  end_datetime: datetime.datetime
 
-class Item(BaseModel):
-  name: str = Field(min_length=4, max_length=12)
-  description: Optional[str] = None
-  price: int
-  tax: Optional[float] = None
+class User(BaseModel):
+  user_id: int
+  user_name: str = Field(max_length=12)
 
-class Data(BaseModel):
-  shop_info: Optional[ShopInfo] = None
-  items: List[Item]
+class Room(BaseModel):
+  room_id: int
+  room_name: str = Field(max_length=12)
+  capacity: int
 
 app = FastAPI()
 
-@app.post('//')
-async def index(data: Data):
-  return {"data": data}
+@app.get('/')
+async def index():
+  return {"message": "success"}
+
+@app.post('/users')
+async def users(users: User):
+  return {"users": users}
+
+@app.post('/rooms')
+async def rooms(rooms: Room):
+  return {"rooms": rooms}
+
+@app.post('/bookings')
+async def bookings(bookings: Booking):
+  return {"bookings": bookings}
